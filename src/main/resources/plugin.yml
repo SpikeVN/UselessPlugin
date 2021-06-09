@@ -1,0 +1,19 @@
+name: MyMoreUselessPlugin
+version: ${project.version}
+main: me.spike.mymoreuselessplugin.MyMoreUselessPlugin
+api-version: 1.16
+authors: [ Spike_VN ]
+description: Vô dụng 100%
+commands:
+  blow:
+    description: Nổ bạn xác ai đó.
+    usage: /blow <player>
+    aliases: [tnt, boom]
+  vodau:
+    description: Đập vỡ đầu ai đó
+    usage: /vodau <player>
+    aliases: [crackhead, paydau]
+  mup:
+    description: Plugin
+    usage: /mup <options>
+    aliases: [howthefuckmyplugindoesntwork]
