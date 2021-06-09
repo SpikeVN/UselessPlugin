@@ -51,7 +51,7 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
         String cmd = command.getName().toUpperCase(Locale.ROOT);
         if (cmd.equals("BLOW")) {
             try {
-                blow(sender, NameToPlayer(args[1]));
+                blow(sender, args);
             } catch (Exception x) {
                 ExceptionHandler(x, "BlowCommand", (Player) sender);
             }
@@ -59,7 +59,7 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
         }
         if (cmd.equals("VODAU")) {
             try {
-                crackHead(NameToPlayer(args[1]));
+                crackHead(sender, args);
             } catch (Exception wtf) {
                 ExceptionHandler(wtf, "CrackHeadCommand", (Player) sender);
             }
@@ -90,14 +90,32 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
         sender.sendMessage(ChatColor.RED + "An error occurred: " + pos + x);
     }
 
-    public static void blow(CommandSender sender, Player victim) {
+    public static void blow(CommandSender sender, String [] a) {
+        Player victim;
+        if (!noArgs(a)) {
+            victim = NameToPlayer(a[0]);
+
+        } else {
+            victim = (Player) sender;
+        }
         victim.getWorld().spawnEntity(victim.getLocation(), EntityType.PRIMED_TNT);
     }
 
-    public static void crackHead(Player victim) {
-        World world = victim.getWorld();
-        Location location = victim.getLocation().add(0,2,0);
-        world.spawnFallingBlock(location, Material.ANVIL, (byte) 0);
+    public static void crackHead(CommandSender sender, String [] a) {
+        Player victim;
+        if (noArgs(a)) {
+            victim = (Player) sender;
+        } else {
+            victim = NameToPlayer(a[0]);
+        }
+        if (victim.getWorld().getBlockAt(victim.getLocation().add(0,5,0)).isPassable()) {
+            World world = victim.getWorld();
+            Location location = victim.getLocation().add(0,5,0);
+            world.spawnFallingBlock(location, Material.ANVIL, (byte) 0);
+        } else {
+            sender.sendMessage(ChatColor.RED + "Chỗ này không đủ thông thoáng. Chỗ nào cao 5 block ấy!");
+        }
+
     }
 
     public static Player NameToPlayer(String name) {
@@ -108,5 +126,15 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
             }
         }
         return victim;
+    }
+
+    public static boolean noArgs(String[] a) {
+        boolean hasNoArgs = false;
+        try {
+            Player player1 = NameToPlayer(a[0]);
+        } catch (Exception x) {     //Exception happens when no parameters is used
+            hasNoArgs = true;
+        }
+        return hasNoArgs;
     }
 }
