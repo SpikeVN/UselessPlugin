@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Locale;
@@ -66,7 +67,7 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
         }
         if (cmd.equals("MUP")) {
             try {
-                    sender.sendMessage(ChatColor.GREEN + "[UselessPlugin] Debug mode started.");
+                    sender.sendMessage(ChatColor.GREEN + "[UselessPlugin] Debug mode started. -- MORE DEBUG.");
                     sender.sendMessage(ChatColor.GREEN + "[UselessPlugin] This mode is for the idiot who wants to debug his bullshit plugin.");
                     sender.sendMessage(ChatColor.GREEN + "[UselessPlugin] Debug Info:");
                     sender.sendMessage(ChatColor.GOLD + "Sender: " + sender.getName() + ", command: " + command.getName() + ", label: " + label);
@@ -108,10 +109,16 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
         } else {
             victim = NameToPlayer(a[0]);
         }
-        if (victim.getWorld().getBlockAt(victim.getLocation().add(0,5,0)).isPassable()) {
+        if (
+                victim.getWorld().getBlockAt(victim.getLocation().add(0,5,0)).isPassable() &&   //summoning falling block straightaway doesn't work at all
+                victim.getWorld().getBlockAt(victim.getLocation().add(0,4,0)).isPassable() &&   //so, block - anvil contraption
+                victim.getWorld().getBlockAt(victim.getLocation().add(0,3,0)).isPassable()      //hope this works
+        ) {
             World world = victim.getWorld();
             Location location = victim.getLocation().add(0,5,0);
-            world.spawnFallingBlock(location, Material.ANVIL, (byte) 0);
+            location.add(0,-1,0).getBlock().setType(Material.BEDROCK);
+            location.getBlock().setType(Material.ANVIL,true);
+            location.add(0,-1,0).getBlock().setType(Material.AIR,true);
         } else {
             sender.sendMessage(ChatColor.RED + "Chỗ này không đủ thông thoáng. Chỗ nào cao 5 block ấy!");
         }

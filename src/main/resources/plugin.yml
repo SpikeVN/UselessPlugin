@@ -15,5 +15,5 @@ commands:
     aliases: [crackhead, paydau]
   mup:
     description: Plugin
-    usage: /mup <options>
+    usage: /mup
     aliases: [howthefuckmyplugindoesntwork]
