@@ -1,3 +1,14 @@
+/*
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+    None.
+just the license. same to none
+*/
 package me.spike.mymoreuselessplugin;
 
 import org.bukkit.*;
@@ -9,7 +20,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Locale;
@@ -79,14 +89,20 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
             } catch (Exception z) {
                 ExceptionHandler(z, "DEBUG", (Player) sender);
             }
-
+        }
+        if (cmd.equals("TRAP")) {
+            try {
+                trap(sender, args);
+            } catch (Exception x) {
+                ExceptionHandler(x, "TrapCommand", (Player) sender);
             }
+        }
 
         return true;
     }
 
     public static void ExceptionHandler(Exception x, String pos, Player sender) {
-        System.out.println("[UselessPlugin] " + ChatColor.RED + "An error occured at " + pos);
+        System.out.println("[UselessPlugin] " + ChatColor.RED + "An error occurred at " + pos);
         System.out.println("[UselessPlugin] " + ChatColor.YELLOW + x);
         sender.sendMessage(ChatColor.RED + "An error occurred: " + pos + x);
     }
@@ -114,7 +130,6 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
                 victim.getWorld().getBlockAt(victim.getLocation().add(0,4,0)).isPassable() &&   //so, block - anvil contraption
                 victim.getWorld().getBlockAt(victim.getLocation().add(0,3,0)).isPassable()      //hope this works
         ) {
-            World world = victim.getWorld();
             Location location = victim.getLocation().add(0,5,0);
             location.add(0,-1,0).getBlock().setType(Material.BEDROCK);
             location.getBlock().setType(Material.ANVIL,true);
@@ -125,6 +140,30 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
 
     }
 
+    public static void trap(CommandSender sender, String[] a) {
+        Player victim;
+        if (noArgs(a)) {
+            victim = (Player) sender;
+        } else {
+            victim = NameToPlayer(a[0]);
+        }
+        Location victimFeet = victim.getLocation();
+        Material BlockOccupied = victimFeet.add(0,-1,0).getBlock().getType();
+        System.out.println(victim.getName() + "has been trapped by " + sender + " at " + victimFeet);
+        victimFeet.add(0,-1,0).getBlock().setType(Material.BEDROCK);
+        victimFeet.add(1, 0, 0).getBlock().setType(Material.BEDROCK);
+        victimFeet.add(-1, 0, 0).getBlock().setType(Material.BEDROCK);
+        victimFeet.add(0, 0, 1).getBlock().setType(Material.BEDROCK);
+        victimFeet.add(0, 0, -1).getBlock().setType(Material.BEDROCK);
+        victimFeet.add(0, 2, 0).getBlock().setType(Material.BEDROCK);   //TRAP VICTIM IN BEDROCK HOLE
+        victim.sendMessage(ChatColor.RED + "Bạn đã bị bẫy trong bedrock bởi " + sender);
+        for (int i = 0; i <= 5; i++) {
+            victim.sendMessage(ChatColor.RED + "Bạn sẽ được thả sau" + i + "s");
+            pause(1000);
+        }
+        victimFeet.add(0,-1,0).getBlock().setType(BlockOccupied);
+
+    }
     public static Player NameToPlayer(String name) {
         Player victim = null;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -143,5 +182,10 @@ public final class MyMoreUselessPlugin extends JavaPlugin implements Listener {
             hasNoArgs = true;
         }
         return hasNoArgs;
+    }
+
+    public static void pause(long time) {
+        long a = System.currentTimeMillis();
+        while (a >= System.currentTimeMillis() - time);    //do nothing and wait ms.
     }
 }

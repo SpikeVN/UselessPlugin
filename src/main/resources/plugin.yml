@@ -7,13 +7,17 @@ description: Vô dụng 100%
 commands:
   blow:
     description: Nổ bạn xác ai đó.
-    usage: /blow <player>
+    usage: /blow [<player>]
     aliases: [tnt, boom]
   vodau:
     description: Đập vỡ đầu ai đó
-    usage: /vodau <player>
+    usage: /vodau [<player>]
     aliases: [crackhead, paydau]
   mup:
     description: Plugin
     usage: /mup
     aliases: [howthefuckmyplugindoesntwork]
+  trap:
+    description: Bẫy ai đó trong bedrock
+    usage: /trap [<username>]
+    aliases: [bay, bedrock]
